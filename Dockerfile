@@ -16,13 +16,5 @@ RUN apt-get update && \
 RUN curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose
 
-# Add Jenkins user to the Docker group, using existing group if necessary
-RUN if getent group docker; then \
-        usermod -aG docker jenkins; \
-    else \
-        groupadd -g 999 docker && \
-        usermod -aG docker jenkins; \
-    fi
-
 # Switch back to the Jenkins user
 USER jenkins
