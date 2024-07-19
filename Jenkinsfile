@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/KM-BD/flaskWebApp.git'
+                git branch: 'main', url: 'https://github.com/KM-BD/flaskWebApp.git'
             }
         }
         stage('Build') {
