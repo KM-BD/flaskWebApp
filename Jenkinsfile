@@ -8,12 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                script {
-                    withCredentials([string(credentialsId: 'github-pat', variable: 'GITHUB_TOKEN')]) {
-                        sh 'git clone https://$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@github.com/KM-BD/flaskWebApp.git'
-                        sh 'cd your-repo'
-                    }
-                }
+                git 'https://github.com/KM-BD/flaskWebApp.git'
             }
         }
         stage('Build') {
