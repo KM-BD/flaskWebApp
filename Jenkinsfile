@@ -1,40 +1,28 @@
 pipeline {
     agent any
-
     environment {
-        DOCKER_BUILDKIT = 1
-        DOCKER_HOST = 'unix:///var/run/docker.sock'
-
+        DOCKER_HOST = 'tcp://host.docker.internal:2375'
     }
-
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/KM-BD/flaskWebApp.git'
+                git 'https://github.com/KM-BD/flaskWebApp.git'
             }
         }
         stage('Build') {
             steps {
                 script {
-                    // Clean up any previous containers
                     sh 'docker-compose down'
+                    sh 'docker-compose build'
                 }
-                // Build the Docker images
-                sh 'docker-compose build'
             }
         }
         stage('Deploy') {
             steps {
-                // Run the Docker containers
-                sh 'docker-compose up -d'
+                script {
+                    sh 'docker-compose up -d'
+                }
             }
-        }
-    }
-
-    post {
-        always {
-            // Clean up workspace
-            cleanWs()
         }
     }
 }
