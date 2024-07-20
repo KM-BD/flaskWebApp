@@ -12,7 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'docker-compose down'
+                    sh 'docker-compose down || true'
                     sh 'docker-compose build'
                 }
             }
