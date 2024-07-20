@@ -17,12 +17,5 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
-            steps {
-                script {
-                    sh 'docker-compose up -d'
-                }
-            }
-        }
     }
 }
