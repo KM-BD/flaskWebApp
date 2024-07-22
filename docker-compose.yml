@@ -17,11 +17,7 @@ services:
       - "5000:5000"
     depends_on:
       - jenkins
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    ports:
-      - "80:80"   
+  
 
 volumes:
   jenkins_home:
