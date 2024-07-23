@@ -1,53 +1,21 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = 'flaskwebapp'
-    }
-
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                script {
-                    docker.build(DOCKER_IMAGE)
-                }
+                git 'https://github.com/your-repo/your-project.git'
             }
         }
-
-        stage('Unit Test') {
+        stage('Install Dependencies') {
             steps {
-                script {
-                    docker.image(DOCKER_IMAGE).inside {
-                        sh 'pytest test_app.py'
-                    }
-                }
+                sh 'pip install -r requirements.txt'
             }
         }
-
-        // stage('Deploy') {
-        //     steps {
-        //         script {
-        //             sh 'docker-compose up -d'
-        //         }
-        //     }
-        // }
-
-        stage('Integration and UI Test') {
+        stage('Run Tests') {
             steps {
-                script {
-                    docker.image(DOCKER_IMAGE).inside {
-                        sh 'pytest integration_ui_tests.py'
-                    }
-                }
+                sh 'pytest'
             }
         }
     }
-
-    // post {
-    //     always {
-    //         script {
-    //             sh 'docker-compose down'
-    //         }
-    //     }
-    // }
 }
