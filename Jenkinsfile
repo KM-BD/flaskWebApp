@@ -43,11 +43,11 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            script {
-                docker.compose.down()
-            }
-        }
-    }
+    // post {
+    //     always {
+    //         script {
+    //             docker.compose.down()
+    //         }
+    //     }
+    // }
 }
