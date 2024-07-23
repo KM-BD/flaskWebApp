@@ -1,73 +1,53 @@
-// pipeline {
-//     agent {
-//         docker {
-//             image 'composer:latest'
-//         }
-//     }
-//     stages {
-//         stage('Checkout') {
-//             steps {
-//                 git branch: 'main', url: 'https://github.com/KM-BD/flaskWebApp.git'
-//             }
-//         }
-//         stage('Build') {
-//             steps {
-//                 script {
-//                     sh 'docker-compose down || true'
-//                     sh 'docker-compose build'
-//                 }
-//             }
-//         }
-//         // stage('Deploy') {
-//         //     steps {
-//         //         script {
-//         //             sh 'docker-compose up -d'
-//         //         }
-//         //     }
-//         // }
-//     }
-// }
-pipeline { 
-    agent {
-        docker {
-            image 'composer:latest'
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = 'flaskwebapp'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    docker.build(DOCKER_IMAGE)
+                }
+            }
+        }
+
+        stage('Unit Test') {
+            steps {
+                script {
+                    docker.image(DOCKER_IMAGE).inside {
+                        sh 'pytest test_app.py'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    docker.compose.up('-d')
+                }
+            }
+        }
+
+        stage('Integration and UI Test') {
+            steps {
+                script {
+                    docker.image(DOCKER_IMAGE).inside {
+                        sh 'pytest integration_ui_tests.py'
+                    }
+                }
+            }
         }
     }
-    stages { 
-        stage ('Checkout') { 
-            steps { 
-                git branch: 'main', url: 'https://github.com/KM-BD/flaskWebApp.git'
-            } 
-        } 
-        stage('Build') {
-            steps {                
-                sh 'docker-compose build'
+
+    post {
+        always {
+            script {
+                docker.compose.down()
             }
         }
-        stage('Run') {
-            steps {
-                sh 'docker-compose up -d'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'docker-compose exec flask_app pytest'
-            }
-        }
-        stage('Code Quality Check via SonarQube') { 
-           steps { 
-               script { 
-                def scannerHome = tool 'flaskWebAppSonarQube'; 
-                   withSonarQubeEnv('flaskWebAppSonarQube') { 
-                   sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=flaskWebApp -Dsonar.sources=." 
-                   } 
-               } 
-           } 
-        } 
-    } 
-    // post { 
-    //     always { 
-    //         recordIssues enabledForFailure: true, tool: sonarQube() 
-    //     } 
-    // } 
-} 
+    }
+}
