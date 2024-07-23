@@ -40,8 +40,7 @@ pipeline {
             } 
         } 
         stage('Build') {
-            steps {
-                sh 'composer install'
+            steps {                
                 sh 'docker-compose build'
             }
         }
