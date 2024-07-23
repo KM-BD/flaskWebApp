@@ -20,5 +20,5 @@ def test_sql_injection(client):
     assert b'SQL injection detected' in rv.data
 
 def test_valid_search(client):
-    rv = client.post('/', data=dict(search_term='safe search'))
+    rv = client.post('/', data=dict(search_term='safe search'), follow_redirects=True)
     assert b'Search term: safe search' in rv.data
