@@ -24,13 +24,13 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                script {
-                    sh 'docker-compose up -d'
-                }
-            }
-        }
+        // stage('Deploy') {
+        //     steps {
+        //         script {
+        //             sh 'docker-compose up -d'
+        //         }
+        //     }
+        // }
 
         stage('Integration and UI Test') {
             steps {
