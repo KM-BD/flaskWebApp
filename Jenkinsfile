@@ -28,11 +28,10 @@
 //     }
 // }
 pipeline { 
-    agent any 
-    environment {
-        DOCKER_HOST = 'tcp://docker:2376'
-        DOCKER_CERT_PATH = '/certs/client'
-        DOCKER_TLS_VERIFY = '1'
+    agent {
+        docker {
+            image 'composer:latest'
+        }
     }
     stages { 
         stage ('Checkout') { 
@@ -42,6 +41,7 @@ pipeline {
         } 
         stage('Build') {
             steps {
+                sh 'composer install'
                 sh 'docker-compose build'
             }
         }
