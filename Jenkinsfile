@@ -41,8 +41,7 @@ pipeline {
                script { 
                 def scannerHome = tool 'flaskWebAppSonarQube'; 
                    withSonarQubeEnv('flaskWebAppSonarQube') { 
-                   sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=flaskWebApp 
-Dsonar.sources=." 
+                   sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=flaskWebApp -Dsonar.sources=." 
                    } 
                } 
            } 
